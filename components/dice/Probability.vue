@@ -36,7 +36,7 @@ const chart = ref<any>(null)
 const chartRef = useTemplateRef("probabilityChart");
 
 watchEffect(() => {
-  if (import.meta.client && chartRef.value && chartRef.value) {
+  if (import.meta.client && chartRef.value) {
     if (chart.value) chart.value.destroy()
     chart.value = new Chart(
       chartRef.value,
