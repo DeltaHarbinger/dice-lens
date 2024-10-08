@@ -1,4 +1,4 @@
-# Dice Sight
+# Dice Lens
 
 A tool with a friendly UI that shows the probability distribution for any combination of dice.
 
