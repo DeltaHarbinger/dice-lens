@@ -13,8 +13,7 @@ const { currentDice, addDie, removeDieByIndex } = useDice();
         :dice="currentDice"
       />
     </ClientOnly>
-    <DiceAddTile id="add-die-button" class="cursor-pointer mx-auto w-fit" @click="addDie()" />
-    <div class="w-fit mx-auto">{{ currentDice.length }}</div>
+    <DiceAddTile class="cursor-pointer mx-auto w-fit" @click="addDie()" />
     <div class="flex gap-6 justify-center max-w-full flex-wrap">
       <div v-for="(_, index) in currentDice" :key="`die_${index}`">
         <DiceEdit v-model="currentDice[index]" />
