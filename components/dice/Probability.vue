@@ -11,7 +11,7 @@ import {
   Filler,
 } from "chart.js";
 import type { DieInfo } from "~/utils/dice";
-import { diceChartData } from "~/utils/dice/chart";
+import { diceChartData, diceChartDatapoints } from "~/utils/dice/chart";
 import { diceProbabilitySet } from "~/utils/dice/probability";
 
 interface Props {
@@ -30,11 +30,11 @@ Chart.register(
 
 const props = defineProps<Props>();
 
-const chart = ref<any>(null);
+const chart = shallowRef<Chart | null>(null);
 const chartRef = useTemplateRef("probabilityChart");
 const chartLoading = ref(false)
 
-function debounce(callback: (...a: any[]) => void, wait = 1000) {
+function debounce(callback: (...a: any[]) => void, wait = 100) {
   let timeoutId: number;
   return (...args: any[]) => {
     chartLoading.value = true
@@ -46,20 +46,31 @@ function debounce(callback: (...a: any[]) => void, wait = 1000) {
   };
 };
 
-const updateChart = debounce((chartItem, diceData) => {
-  if (chart.value) chart.value.destroy();
+function createChart(chartItem: ChartItem, diceData: DieInfo[]) {
+  chartLoading.value = true
   chart.value = new Chart(
-    chartItem as ChartItem,
+    chartItem,
     diceChartData(diceProbabilitySet(diceData))
   );
+  chartLoading.value = false
+}
+
+const updateChart = debounce((diceData) => {
+  if (!chart.value) return
+  const diceDatapoints = diceChartDatapoints(diceProbabilitySet(diceData))
+  
+  chart.value.data.labels = diceDatapoints.map((point) => point.label)
+  chart.value.data.datasets[0].data = diceDatapoints.map((point) => point.value)
+  chart.value.update()
 })
 
-watchEffect(() => {
-  console.log('ran')
-  if (import.meta.client && chartRef.value && props.dice) {
-    updateChart(chartRef.value, props.dice.map(die => ({ ...die })))
+watch(() => props.dice, () => {
+  if (import.meta.client && props.dice) {
+    updateChart(props.dice)
   }
-});
+}, { deep: true });
+
+onMounted(() => createChart(chartRef.value as ChartItem, props.dice))
 </script>
 
 <template>

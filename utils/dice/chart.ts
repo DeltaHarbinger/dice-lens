@@ -1,11 +1,7 @@
 import type { ChartConfiguration } from "chart.js";
 
 export function diceChartData(diceProbability: Record<number, number>): ChartConfiguration {
-    const sortedKeys = Object.keys(diceProbability).sort((a, b) => parseInt(a) - parseInt(b));
-    const sortedDatapoints = sortedKeys.map((key) => ({
-        label: key,
-        value: diceProbability[parseInt(key)],
-    }));
+    const sortedDatapoints = diceChartDatapoints(diceProbability)
     return {
         type: "bar",
         data: {
@@ -52,4 +48,13 @@ export function diceChartData(diceProbability: Record<number, number>): ChartCon
             },
         },
     };
+}
+
+export function diceChartDatapoints(diceProbability: Record<number, number>): { label: string, value: number }[] {
+    const sortedKeys = Object.keys(diceProbability).sort((a, b) => parseInt(a) - parseInt(b));
+    const sortedDatapoints = sortedKeys.map((key) => ({
+        label: key,
+        value: diceProbability[parseInt(key)],
+    }));
+    return sortedDatapoints
 }
