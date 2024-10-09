@@ -15,9 +15,9 @@ const { currentDice, addDie, removeDieByIndex } = useDice();
     </ClientOnly>
     <DiceAddTile class="cursor-pointer mx-auto w-fit" @click="addDie()" />
     <div class="flex gap-6 justify-center max-w-full flex-wrap">
-      <div v-for="(_, index) in currentDice" :key="`die_${index}`">
-        <DiceEdit v-model="currentDice[index]" />
-        <button class="text-center w-full text-red-500" @click="removeDieByIndex(index)">Delete</button>
+      <div v-for="(_, index) in currentDice" :key="`die_${currentDice.length - (index + 1)}`">
+        <DiceEdit v-model="currentDice[currentDice.length - (index + 1)]" />
+        <button class="text-center w-full text-red-500" @click="removeDieByIndex(currentDice.length - (index + 1))">Delete</button>
       </div>
     </div>
   </main>

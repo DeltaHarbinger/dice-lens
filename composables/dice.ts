@@ -11,7 +11,7 @@ export const useDice = () => {
   const currentDice = useState<DieInfo[]>('currentDice', () => [{ ...defaultDieInfo }, { ...defaultDieInfo }])
 
   function addDie(dieInfo: DieInfo = defaultDieInfo) {
-    currentDice.value.unshift({ ...dieInfo })
+    currentDice.value.push({ ...dieInfo })
   }
 
   function removeDieByIndex(index: number) {
