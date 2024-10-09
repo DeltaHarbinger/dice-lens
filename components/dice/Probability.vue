@@ -28,20 +28,23 @@ Chart.register(
   Tooltip
 );
 
-function debounce(callback: (...a: any[]) => void, wait = 1000) {
-  let timeoutId: number;
-  return (...args: any[]) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback(...args);
-    }, wait);
-  };
-};
-
 const props = defineProps<Props>();
 
 const chart = ref<any>(null);
 const chartRef = useTemplateRef("probabilityChart");
+const chartLoading = ref(false)
+
+function debounce(callback: (...a: any[]) => void, wait = 1000) {
+  let timeoutId: number;
+  return (...args: any[]) => {
+    chartLoading.value = true
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback(...args);
+      chartLoading.value = false
+    }, wait);
+  };
+};
 
 const updateChart = debounce((chartItem, diceData) => {
   if (chart.value) chart.value.destroy();
@@ -60,5 +63,5 @@ watchEffect(() => {
 </script>
 
 <template>
-  <canvas ref="probabilityChart"></canvas>
+  <canvas ref="probabilityChart" class="transition-all" :class="{'blur-lg duration-200': chartLoading, 'duration-500': !chartLoading}"></canvas>
 </template>
