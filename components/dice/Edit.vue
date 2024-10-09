@@ -66,7 +66,6 @@ function onDiceClick() {
 }
 
 function validateSideInput(input: string): boolean {
-  console.log(input);
   return (
     input.includes("Arrow") ||
     input === "Backspace" ||
