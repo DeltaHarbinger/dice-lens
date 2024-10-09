@@ -43,18 +43,18 @@ const props = defineProps<Props>();
 const chart = ref<any>(null);
 const chartRef = useTemplateRef("probabilityChart");
 
-const updateChart = debounce(() => {
+const updateChart = debounce((chartItem, diceData) => {
   if (chart.value) chart.value.destroy();
   chart.value = new Chart(
-    chartRef.value as ChartItem,
-    diceChartData(diceProbabilitySet(props.dice))
+    chartItem as ChartItem,
+    diceChartData(diceProbabilitySet(diceData))
   );
 })
 
 watchEffect(() => {
   console.log('ran')
-  if (import.meta.client && chartRef.value && props.dice.length) {
-    updateChart()
+  if (import.meta.client && chartRef.value && props.dice) {
+    updateChart(chartRef.value, props.dice.map(die => ({ ...die })))
   }
 });
 </script>
