@@ -39,8 +39,8 @@ export function diceChartData(diceProbability: Record<number, number>): ChartCon
                         label: function (context) {
                             return context.parsed.y.toLocaleString("en-US", {
                                 style: "percent",
-                                maximumFractionDigits: 2,
-                                minimumFractionDigits: 0,
+                                minimumSignificantDigits: 1,
+                                maximumSignificantDigits: 4,
                             });
                         },
                     },

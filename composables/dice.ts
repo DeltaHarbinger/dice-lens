@@ -8,7 +8,7 @@ const defaultDieInfo: DieInfo = {
 }
 
 export const useDice = () => {
-  const currentDice = useState<DieInfo[]>('currentDice', () => [{ sideCount: 6 }, { sideCount: 6 }])
+  const currentDice = useState<DieInfo[]>('currentDice', () => [{ ...defaultDieInfo }, { ...defaultDieInfo }])
 
   function addDie(dieInfo: DieInfo = defaultDieInfo) {
     currentDice.value.unshift({ ...dieInfo })
