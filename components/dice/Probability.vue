@@ -32,27 +32,22 @@ const props = defineProps<Props>();
 
 const chart = shallowRef<Chart | null>(null);
 const chartRef = useTemplateRef("probabilityChart");
-const chartLoading = ref(false)
 
 function debounce(callback: (...a: any[]) => void, wait = 100) {
   let timeoutId: number;
   return (...args: any[]) => {
-    chartLoading.value = true
     window.clearTimeout(timeoutId);
     timeoutId = window.setTimeout(() => {
       callback(...args);
-      chartLoading.value = false
     }, wait);
   };
 };
 
 function createChart(chartItem: ChartItem, diceData: DieInfo[]) {
-  chartLoading.value = true
   chart.value = new Chart(
     chartItem,
     diceChartData(diceProbabilitySet(diceData))
   );
-  chartLoading.value = false
 }
 
 const updateChart = debounce((diceData) => {
@@ -74,5 +69,5 @@ onMounted(() => createChart(chartRef.value as ChartItem, props.dice))
 </script>
 
 <template>
-  <canvas ref="probabilityChart" class="transition-all" :class="{'blur-lg duration-200': chartLoading, 'duration-500': !chartLoading}"></canvas>
+  <canvas ref="probabilityChart"></canvas>
 </template>
