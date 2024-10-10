@@ -2,12 +2,12 @@ import type { DieInfo } from ".";
 
 export function diceProbabilitySet(
   diceInfo: DieInfo[]
-): Record<number, number> {
-  if (diceInfo.length === 0) return {};
+): Map<number, number> {
+  if (diceInfo.length === 0) new Map<number, number>();
 
   for(let die of diceInfo) {
     if (!die.sideCount || die.sideCount < 1) {
-      return {}
+      return new Map<number, number>()
     }
   }
 
@@ -25,9 +25,9 @@ export function diceProbabilitySet(
     if (diceInfo[0].disadvantage) {
         return disadvantageProbabilitySet(diceInfo)
     }
-    const probabilitySet: Record<number, number> = {};
+    const probabilitySet = new Map<number, number>;
     for (let side = 1; side <= diceInfo[0].sideCount; side += 1) {
-        probabilitySet[side] = 1 / diceInfo[0].sideCount;
+        probabilitySet.set(side,  1 / diceInfo[0].sideCount)
     }
     return probabilitySet;
   }
@@ -39,34 +39,34 @@ export function diceProbabilitySet(
   return diceCombinationProbability(individualProbabilities)
 }
 
-function advantageProbabilitySet(diceInfo: DieInfo[]): Record<number, number> {
-  const probabilitySet: Record<number, number> = {};
+function advantageProbabilitySet(diceInfo: DieInfo[]): Map<number, number> {
+  const probabilitySet = new Map<number, number>();
   if (diceInfo.length === 1) {
     for (let side = 1; side <= diceInfo[0].sideCount; side += 1) {
-        probabilitySet[side] = ((side) * 2 - 1) / (diceInfo[0].sideCount * diceInfo[0].sideCount);
+        probabilitySet.set(side, ((side) * 2 - 1) / (diceInfo[0].sideCount * diceInfo[0].sideCount));
     }
   }
   // TODO: Support rolling multiple dice with advantage. More likely a recursive function
   return probabilitySet;
 }
 
-function disadvantageProbabilitySet(diceInfo: DieInfo[]): Record<number, number> {
-    const probabilitySet: Record<number, number> = {};
+function disadvantageProbabilitySet(diceInfo: DieInfo[]): Map<number, number> {
+    const probabilitySet = new Map<number, number>();
   if (diceInfo.length === 1) {
     for (let side = 1; side <= diceInfo[0].sideCount; side += 1) {
-        probabilitySet[diceInfo[0].sideCount - side + 1] = ((side) * 2 - 1) / (diceInfo[0].sideCount * diceInfo[0].sideCount);
+        probabilitySet.set(diceInfo[0].sideCount - side + 1, ((side) * 2 - 1) / (diceInfo[0].sideCount * diceInfo[0].sideCount)) 
     }
   }
   // TODO: Support rolling multiple dice with advantage. More likely a recursive function
   return probabilitySet;
 }
 
-function diceCombinationProbability(diceProbability: Record<number, number>[]): Record<number, number> {
-    return diceProbability.reduce((currentProbability, currentSet): Record<number, number> => {
-        const combinedSet: Record<number, number> = {}
-        Object.keys(currentProbability).forEach((baseFace) => {
-            Object.keys(currentSet).forEach((addedFace) => {
-                combinedSet[parseInt(baseFace) + parseInt(addedFace)] = (combinedSet[parseInt(baseFace) + parseInt(addedFace)] || 0) + currentProbability[parseInt(baseFace)] * currentSet[parseInt(addedFace)]
+function diceCombinationProbability(diceProbability: Map<number, number>[]): Map<number, number> {
+    return diceProbability.reduce((currentProbability, currentSet): Map<number, number> => {
+        const combinedSet = new Map<number, number>()
+        currentProbability.keys().forEach((baseFace) => {
+            currentSet.keys().forEach((addedFace) => {
+              combinedSet.set(baseFace + addedFace, (combinedSet.get(baseFace + addedFace) || 0) + ((currentProbability.get(baseFace) || 0) * (currentSet.get(addedFace) || 0))) 
             })
         })
         return combinedSet
