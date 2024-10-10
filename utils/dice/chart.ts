@@ -35,6 +35,7 @@ export function diceChartData(diceProbability: Record<number, number>): ChartCon
                 tooltip: {
                     enabled: true,
                     intersect: false,
+                    mode: 'x',
                     callbacks: {
                         label: function (context) {
                             return context.parsed.y.toLocaleString("en-US", {
